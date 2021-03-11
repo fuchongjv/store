@@ -5,6 +5,8 @@ ave = 0
 while count < 10:
     num = input()
     num = int(num)
+    if count == 0:
+        _max = num
     sum += num
     count += 1
     if _max < num:

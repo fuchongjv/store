@@ -1,21 +1,8 @@
-num1 = input()
-num1 = int(num1)
-num2 = input()
-num2 = int(num2)
-num3 = input()
-num3 = int(num3)
-num4 = input()
-num4 = int(num4)
-num5 = input()
-num5 = int(num5)
-num6 = input()
-num6 = int(num6)
-num7 = input()
-num7 = int(num7)
-num8 = input()
-num8 = int(num8)
-num9 = input()
-num9 = int(num9)
-num10 = input()
-num10 = int(num10)
-print(num1 + num2 + num3 + num4 + num5 + num6 + num7 + num8 + num9 + num10)
+count = 0
+sum = 0
+while count < 10:
+    num = input()
+    num = int(num)
+    sum += num
+    count += 1
+print(sum)
