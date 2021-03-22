@@ -29,14 +29,16 @@ def bank_adduser(account, username, password, country, province, street, door, m
     # 查询，从游标里提取数据
     data = cursor.fetchall()
     # 判断用户库是否已满
-    if len(data) >= 100:
+    if data[0][0] >= 100:
         return 3
 
     # 判断是否存在
     # 获取所有键，然后在判断是否有
-    for d in data:
-        if d[0] == account:
-            return 2
+    sql3 = "select * from bank where account = %s "
+    cursor.execute(sql3, account)
+    data2 = cursor.fetchall()
+    if len(data2) != 0:
+        return 2
 
     sql2 = "insert into bank  values(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     param = [account, username, password, country, province, street, door, bank_name, money]
@@ -104,7 +106,7 @@ def bank_deposit(account):
         if d[0] == account:
             money = int(input("请输入金额："))
             money = money + int(d[8])
-            update = "update bank set 余额='" + str(money) + "' where 账号=" + account
+            update = "update bank set money='" + str(money) + "' where account=" + account
             cursor.execute(update)
             con.commit()
             cursor.close()
@@ -156,7 +158,7 @@ def bank_withdraw(account):
                 money = int(input("请输入金额："))
                 if money <= int(d[8]):
                     money = int(d[8]) - money
-                    update = "update bank set 余额='" + str(money) + "' where 账号=" + account
+                    update = "update bank set money='" + str(money) + "' where account=" + account
                     cursor.execute(update)
                     con.commit()
                     return 0
@@ -165,9 +167,6 @@ def bank_withdraw(account):
             else:
                 return 2
     return 1
-
-    cursor.close()
-    con.close()
 
 
 # 取钱逻辑
@@ -217,8 +216,8 @@ def bank_transfer(out_account, in_account):
                         if money <= int(d[8]):
                             money1 = int(d[8]) - money
                             money2 = int(c[8]) + money
-                            update1 = "update bank set 余额='" + str(money1) + "' where 账号=" + out_account
-                            update2 = "update bank set 余额='" + str(money2) + "' where 账号=" + in_account
+                            update1 = "update bank set money='" + str(money1) + "' where account=" + out_account
+                            update2 = "update bank set money='" + str(money2) + "' where account=" + in_account
                             cursor.execute(update1)
                             cursor.execute(update2)
                             con.commit()
@@ -229,8 +228,6 @@ def bank_transfer(out_account, in_account):
                         return 2
 
     return 1
-    cursor.close()
-    con.close()
 
 
 # 转账逻辑
@@ -283,7 +280,7 @@ def bank_inquire(account):
             i = i + 1
             password = input("请输入密码：")
             if password == c[2]:
-                print("前账号：", account)
+                print("当前账号：", account)
                 print("密码：******")
                 print("余额：", c[8])
                 print("用户居住地址：", c[3], c[4], c[5], c[6])
@@ -298,7 +295,7 @@ def bank_inquire(account):
 
 # 查询逻辑
 def inquire():
-    account = input("请输入账号")
+    account = input("请输入账号：")
     bank_inquire(account)
 
 
